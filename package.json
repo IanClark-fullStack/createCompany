@@ -4,12 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "build:css": "tailwind build src/styleguide.css -o dist/styles.css"
     },
     "author": "",
     "license": "MIT",
     "dependencies": {
-        "inquirer": "^6.5.2"
+        "inquirer": "^6.5.2",
+        "tailwindcss": "^2.2.17"
     },
     "devDependencies": {
         "jest": "^27.3.1"

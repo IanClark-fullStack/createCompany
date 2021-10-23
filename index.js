@@ -27,6 +27,7 @@ const beginFile = `<!DOCTYPE html>
         <title>Team Rolodex</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://use.typekit.net/lga8kfj.css">
         <link rel="stylesheet" href="./styles.css">
         
     </head>
