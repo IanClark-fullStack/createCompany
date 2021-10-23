@@ -11,7 +11,6 @@ const Intern = require('./lib/Intern.js');
 // Main Menu Array 
 const menuChoices = ['Add an Engineer', 'Add an Intern', 'Or finish building the team'];
 
-let teamMember;
 
 // Final Team Members Array 
 let finalTeam = [];

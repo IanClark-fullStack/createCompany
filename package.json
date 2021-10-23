@@ -1,17 +1,17 @@
 {
-    "name":"static-site",
-    "version":"1.0.0",
-    "description":"",
-    "main":"index.js",
-    "scripts":{
-        "test":"jest"
+    "name": "static-site",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest"
     },
-    "author":"",
-    "license":"MIT",
-    "dependencies":{
-        "inquirer":"^6.5.2"
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "inquirer": "^6.5.2"
     },
-    "devDependencies":{
-        "jest":"^27.3.1"
+    "devDependencies": {
+        "jest": "^27.3.1"
     }
 }
