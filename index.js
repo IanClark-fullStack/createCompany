@@ -68,30 +68,17 @@ let employeeQuestions = [
     },
 ]
 
-    //Conditions to Return Industry Specfic Questions
 
-
-    //  {
-    //     type: 'input',
-    //     name: 'gitUser',
-    //     when: ({ !menuOptions }) => { if (!menuOptions) modi {
-    //     } console.log(`\x1b[31m${mainMenu}\x1b[0m`); },
-    //     message: 'Please enter the engineers github username',
-    // },
-
-
-
-// Then, send the data recieved back to generatePage, where the data 
-
+// After the init function, 
 const mutateQuestions = (data) => {
    // If the user selects an option other "finish build", 
     if (data.menuOption === 'Add an Engineer') { 
-        employeeQuestions.splice(3, 1, githubPlease);
-        inquirer.prompt(employeeQuestions)
+        employeeQuestions.splice(3, 1, githubPlease); // Replace the previous role-specific question 
+        inquirer.prompt(employeeQuestions) // send the user back to the top of the prompt
         .then((data) => {
             let teamMember = new Engineer(data.employeeName, data.employeeID, data.employeeEmail, data.gitUser);
             finalTeam.push(teamMember);
-            // Return? 
+            // Evaluate the Main Menu Response Again
             mutateQuestions(data);
         })
         
@@ -102,11 +89,10 @@ const mutateQuestions = (data) => {
         .then((data) => {
             let teamMember = new Intern(data.employeeName, data.employeeID, data.employeeEmail, data.eduName);
             finalTeam.push(teamMember);
-            // Return? 
+            // Evaluate the Main Menu Response Again
             mutateQuestions(data);
         })
-        
-    } else {
+    } else { // If we're not adding a new team member, exit the function with the built-up array
        return generateContent(finalTeam);
     }
      
