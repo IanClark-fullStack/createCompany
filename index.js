@@ -1,17 +1,18 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
-const generateContent = require('./src/generatePage.js');
+// const generatePage = require('./dist/index.html');
 
 // Require sub classes 
 const Manager = require('./lib/Manager.js');
-const Engineer = require('./lib/Engineer.js');
+const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern.js');
+const Employee = require('./lib/Employee.js');
 
 
 // Main Menu Array 
 const menuChoices = ['Add an Engineer', 'Add an Intern', 'Or finish building the team'];
 
-
+let results;
 // Final Team Members Array 
 let finalTeam = [];
 
@@ -92,9 +93,45 @@ const mutateQuestions = (data) => {
             mutateQuestions(data);
         })
     } else { // If we're not adding a new team member, exit the function with the built-up array
-       return generateContent(finalTeam);
+       return startPage(finalTeam);
     }
      
+}
+
+const startPage = (arrayOfMembers) => {
+        return new Promise(function(resolve, reject) {
+       
+            for (let i = 0; i < arrayOfMembers.length; i++) {
+                
+                let section = arrayOfMembers[i].paintToPage();
+                console.log(section);
+                fs.appendFile('./dist/index.html', section, function (err) {
+                    if (err) { return reject(err); };
+                    return resolve();
+                })
+            }
+            
+            finalizePage(); 
+         })
+         
+    
+}
+
+const finalizePage = () => {
+    const endPage = `        
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="../src/generatePage.js" async defer></script>
+</body>
+</html>`;
+    return new Promise(function(resolve, reject) {
+        fs.appendFile('./dist/index.html', endPage, function(err) {
+            if (err) { return reject(err) }
+            return resolve();
+        })
+    })
 }
 
 
