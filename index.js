@@ -8,11 +8,8 @@ const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern.js');
 const Employee = require('./lib/Employee.js');
 
-
 // Main Menu Array 
 const menuChoices = ['Add an Engineer', 'Add an Intern', 'Or finish building the team'];
-
-let results;
 
 // Start HTML 
 const beginFile = `<!DOCTYPE html>
@@ -32,8 +29,8 @@ const beginFile = `<!DOCTYPE html>
         
     </head>
     <body>
-        <header></header>
-        <main>`;
+        <header><h1 class="text8-xl bg-blue-300 text-white my-4" style="font-family: proxima-nova, sans-serif;">Team Rolodex</h1></header>
+        <main class="w-1/2 mx-auto divide-y divide-white">`;
 // Final Team Members Array 
 let finalTeam = [];
 
@@ -65,27 +62,27 @@ let employeeQuestions = [
     {
         type: 'input', 
         name: 'welcome', 
-        message: 'Welcome to the easiest way to create a company directory. When you have finished answering the following prompts, your team members info will be saved to a new web page and accesible at any time.'
+        message: `\x1b[35mEnter your team Info, starting the manager> Press (Enter) to Continue\x1b[0m`,
     },
     {
         type: 'input',
         name: 'employeeName',
-        message: 'Please enter your team managers name',
+        message: 'What is the members name?',
     },
     {
         type: 'input',
         name: 'employeeID',
-        message: 'Enter the employee ID for this manager',
+        message: 'Enter the employee ID',
     },
     {
         type: 'input',
         name: 'employeeEmail',
-        message: 'Enter the preferred email address for this manager',
+        message: 'Enter their preferred email address',
     },
     {
         type: 'input',
         name: 'mgmtOffice',
-        message: 'Enter the office # associated with this manager',
+        message: 'Enter the office # of the manager',
     },
     // Return back to Options Questions
     {
@@ -97,7 +94,6 @@ let employeeQuestions = [
     },
 ]
 
-
 // After the init function, 
 const fireQuestions = () => {
     inquirer.prompt(employeeQuestions)
@@ -105,10 +101,9 @@ const fireQuestions = () => {
     .then((firstAnswers) => {
         employeeQuestions.shift()
             // The first promise, returns data specific to the manager role. 
-        let teamMember = new Manager(firstAnswers.employeeName, firstAnswers.employeeID, firstAnswers.employeeEmail, firstAnswers.mgmtOffice);
+        let teamManager = new Manager(firstAnswers.employeeName, firstAnswers.employeeID, firstAnswers.employeeEmail, firstAnswers.mgmtOffice);
         // After constructing the manager, push it to our team array. 
-        finalTeam.push(teamMember);
-
+        finalTeam.push(teamManager);
         mutateQuestions(firstAnswers);
     })
 }
@@ -136,49 +131,43 @@ const mutateQuestions = (data) => {
             mutateQuestions(data);
         })
     } else { // If we're not adding a new team member, exit the function with the built-up array
-        startPage(finalTeam); // deleted return before function
+        startPage(finalTeam); 
     }
 }
 
 const startPage = (arrayOfMembers) => {
-    const endPage = `        
-    </main>
-    <!--[if lt IE 7]>
-        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="../src/generatePage.js" async defer></script>
-    </body>
-    </html>`;
-    return new Promise(function(resolve, reject) {       
-        for (let i = 0; i < arrayOfMembers.length; i++) {
-            
-            let section = arrayOfMembers[i].paintToPage();
-            console.log(section);
-            fs.appendFile('./dist/index.html', section, function (err) {
-                if (err) { return reject(err); };
-                return resolve();
-            })
-        }    
-        return new Promise(function(resolve, reject) {
-            fs.appendFile('./dist/index.html', endPage, function(err) {
-                if (err) { return reject(err) }
-                return resolve();
-            })
+    for (let i=0; i < arrayOfMembers.length; i++) {
+        // Method to create a section for each employee in the final team array.
+        let section = arrayOfMembers[i].paintToPage();
+        // Paint each section to the Html page
+        fs.appendFile('./dist/index.html', section, function (err) {
+            err ? console.error(err) : console.log('Section added!')
         })
-        
+    }
+    // Function to add the Final Closing tags to the page    
+    return finalizePage();
+}
+
+const finalizePage = () => {
+    const endHtml = `
+    </main>        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="../src/generatePage.js" async defer></script>
+    </body>
+    </html>`; 
+    fs.appendFile('./dist/index.html', endHtml, function(err) {
+        err ? console.error(err) : console.log('End html added!')
     })
-    
 }
 
 // Define Initialization function 
 const init = () => {
-    if (fs.existsSync('./dist/index.html')) {
+    if (fs.existsSync('./dist/index.html')) {   // Prompt the User if the File Already exists
         inquirer.prompt(overwriteFile)
         .then((overwriteResponse) => {
-            if (!overwriteResponse.response) {
+            if (!overwriteResponse.response) { // If they wish to overwrite the file
                 fs.writeFile('./dist/index.html', beginFile, (err) =>
-                    err ? console.error(err) : console.log('file created')
+                    err ? console.error(err) : console.log(`\x1b[32mfile created\x1b[0m`)
                 )
                 fireQuestions();
             } else {
@@ -187,9 +176,6 @@ const init = () => {
         })
     }
 }
-
-
-
 // Call Initialization function 
 init();
 
